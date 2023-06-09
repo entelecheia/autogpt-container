@@ -1,0 +1,33 @@
+version: "3.9"
+
+services:
+  # Defines a service named "workspace"
+  app:
+    build:
+      # Sets the build context to the current directory
+      context: .
+      # Specifies the Dockerfile to use for the build
+      dockerfile: .docker/Dockerfile
+      # Specifies build-time variables (ARGs)
+      args:
+        ARG_VARIANT: $VARIANT
+        ARG_USERNAME: $USERNAME
+        ARG_USER_UID: $USER_UID
+        ARG_USER_GID: $USER_GID
+        ARG_APP_ROOT: $CONTAINER_APP_ROOT
+      # Sets the image name for the built image
+    image: $IMAGE_NAME
+    # Sets the hostname of the container
+    hostname: $CONTAINER_HOSTNAME
+    environment:
+      OPENAI_API_KEY: $OPENAI_API_KEY
+    volumes:
+      - "$PWD/workspace/auto_gpt_workspace:/app/autogpt/auto_gpt_workspace"
+      - "$PWD/workspace/data:/app/data"
+      ## allow auto-gpt to write logs to disk
+      - "$PWD/workspace/logs:/app/logs"
+networks:
+  default:
+    # Sets the name of the default network and makes it external
+    name: $DOCKER_NETWORK_NAME
+    external: true
