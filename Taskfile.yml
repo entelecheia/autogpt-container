@@ -1,0 +1,28 @@
+# https://taskfile.dev
+
+version: '3'
+
+tasks:
+  default:
+    deps:
+      - task: task-ls
+
+  task-ls:
+    desc: List available tasks
+    cmds:
+      - task --list
+
+  docker-build:
+    desc: Build the Docker image (runtime)
+    cmds:
+      - set -a && source .docker/docker.env && docker-compose --project-directory . -f .docker/docker-compose.yaml build && set +a
+
+  docker-run:
+    desc: Run the Docker image (runtime)
+    cmds:
+      - set -a && source .docker/docker.env && docker-compose --project-directory . -f .docker/docker-compose.yaml run app && set +a
+
+  docker-build-dev:
+    desc: Build the Docker image (dev)
+    cmds:
+      - VARIANT=dev set -a && source .docker/docker.env && docker-compose --project-directory . -f .docker/docker-compose.yaml build && set +a
